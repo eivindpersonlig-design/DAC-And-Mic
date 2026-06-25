@@ -1,5 +1,7 @@
-#Code made by Magnus Næssan Gaarder
-#Circuit made by Bjørnar Odden Christiansen & Eivind Næssan Gaarder
+##### Code made by Magnus Næssan Gaarder
+##### Circuit made by Bjørnar Odden Christiansen & Eivind Næssan Gaarder
+
+---
 
 # Arduino Audio Playback via R-2R DAC
 

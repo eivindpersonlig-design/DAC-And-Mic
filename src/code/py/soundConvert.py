@@ -1,19 +1,52 @@
+import argparse
+from pathlib import Path
+import sys
 import wave
+
 import numpy as np
-import time
 
-# === SETTINGS ===
-input_file = r"Specialz.wav"
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Convert a WAV file into an Arduino-compatible header file."
+    )
+    parser.add_argument(
+        "--input-file",
+        default="Specialz.wav",
+        help="Path to the source WAV file.",
+    )
+    parser.add_argument(
+        "--output-dir",
+        default=".",
+        help="Directory where the generated header should be written.",
+    )
+    parser.add_argument(
+        "--header-name",
+        default="audio_data.h",
+        help="Name of the generated header file.",
+    )
+    parser.add_argument(
+        "--downsample",
+        type=int,
+        default=16,
+        help="Downsample factor applied before export.",
+    )
+    return parser.parse_args()
 
-# Create a unique output header
-timestamp = time.strftime("%Y%m%d_%H%M%S")
-output_header = f"audio_{timestamp}.h"
 
-# Downsample factor (reduces sample rate)
-DOWNSAMPLE = 16
+args = parse_args()
+input_file = Path(args.input_file)
+output_dir = Path(args.output_dir)
+output_header = output_dir / args.header_name
+DOWNSAMPLE = args.downsample
+
+if not input_file.is_file():
+    print(f"Error: input WAV file not found: {input_file}", file=sys.stderr)
+    sys.exit(1)
+
+output_dir.mkdir(parents=True, exist_ok=True)
 
 # === LOAD WAV ===
-with wave.open(input_file, 'rb') as wav:
+with wave.open(str(input_file), 'rb') as wav:
     n_channels = wav.getnchannels()
     sample_width = wav.getsampwidth()
     sample_rate = wav.getframerate()
@@ -73,4 +106,4 @@ with open(output_header, "w") as f:
     f.write("\n};\n")
     f.write(f"const unsigned int audio_len = {len(data)};\n")
 
-print(f"✅ Done! Generated header file: {output_header}")
+print(f"Done. Generated header file: {output_header}")

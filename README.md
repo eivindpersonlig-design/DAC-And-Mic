@@ -65,10 +65,9 @@ The code requires the following Arduino libraries:
 
 ## How to run
 
-- Run the python script with a audio file (.wav) in the same folder. Be mindfull to change the imput_file-name to the name of the audio-file (+ fileending).
-- When the python script runs successfully and creates a h-file, rename it and move it to the /cpp/DAC_R-2R/ folder.
-- Then open the DAC_R-2R/ folder in Arduino IDE.
-- Change the name of the header import to the proper name of the h-file that was created.
-- Connect the PC to the Arduino with a USB cable, and set the board and port approperiatly.
-- Compile and upload the DAC_R-2R.ino file on your system to the Arduino.
-- The Audio should now be available on channel 2 as output.
+- Put the WAV file you want to convert in `src/sound/`.
+- Run the full pipeline from the project root with `make run_full WAV_FILE=./src/sound/<your-file>.wav PORT=<your-port>`.
+- On Linux and macOS, a typical port looks like `/dev/ttyACM0` or `/dev/cu.usbmodemXXXX`; on Windows it is usually `COM3`.
+- If you only keep one `.wav` file in `src/sound/`, the Makefile will pick it up automatically.
+- The pipeline will generate `src/sound/audio_data.h`, copy it into `src/code/cpp/DAC_R-2R/` for the compile step, upload the sketch, and then clean the generated header and build output.
+- If you want to run the stages separately, use `make build`, `make run_py`, and `make run_cpp PORT=<your-port>`.

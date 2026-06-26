@@ -1,3 +1,7 @@
 *.h
 ../Bangers/
 
+.venv
+.vscode
+.idea
+
